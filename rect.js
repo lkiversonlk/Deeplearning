@@ -20,16 +20,25 @@ function Rect(x, y, data) {
     }
 };
 
+/**
+ * init the rect elements to be random value in (0, 1)
+ * @returns {Rect}
+ */
 Rect.prototype.randomize = function () {
     var self = this;
     for(var i = 0 ; i < self.y; i ++){
         for(var j = 0; j < self.x; j ++){
-            self.data[i * self.x + j]= Math.random();
+            self.data[i * self.x + j]= Math.random() - 0.5;
         }
     }
     return self;
 };
 
+/**
+ * return a new rect that the represent the junc result
+ * @param rect
+ * @returns {Rect}
+ */
 Rect.prototype.junc = function (rect) {
     var self = this;
     if(rect instanceof Rect){
@@ -83,6 +92,10 @@ Rect.prototype.set = function (x, y, data) {
     }
 };
 
+/**
+ * return a new rect that is the transpose of the original rect
+ * @returns {Rect}
+ */
 Rect.prototype.transpose = function () {
     var self = this;
     var ret = new Rect(self.y, self.x);
@@ -95,22 +108,32 @@ Rect.prototype.transpose = function () {
     return ret;
 };
 
-Rect.prototype.operate = function (operate) {
+/**
+ * operate on the original rect, update its data
+ * @param operate
+ * @returns {Rect}
+ */
+Rect.prototype.operate = function (oper) {
     var self = this;
     for(var i = 0; i < self.x; i ++){
         for(var j = 0; j < self.y; j++){
-            self.set(i, j, operate(self.get(i, j), i, j));
+            self.set(i, j, oper(self.get(i, j), i, j));
         }
     }
     return self;
 };
 
+/**
+ * oprate on the original rect with the added data
+ * @param rect
+ * @returns {Rect}
+ */
 Rect.prototype.add = function (rect) {
+    var self = this;
     if(rect instanceof Rect && this.x == rect.x && this.y == rect.y){
-        return (new Rect(this.x, this.y)).operate(function (data, i, j) {
+        return self.operate(function (data, i, j) {
             return data + rect.get(i, j);
         });
-
     }else{
         throw new Error("only rect with the same width and height could add together");
     }
@@ -121,6 +144,28 @@ Rect.prototype.minus = function (rect) {
     return self.add(rect.operate(function (data) {
         return -1 * data;
     }));
+};
+
+Rect.prototype.size = function () {
+    return this.x * this.y;
+};
+
+Rect.prototype.reset = function (x) {
+    return this.operate(function (data, i, j) {
+        return x;
+    });
+};
+
+/**
+ * return new copy of the rect which has the same data with the original
+ * @returns {Rect}
+ */
+Rect.prototype.copy = function () {
+    var self = this;
+    var ret = new Rect(self.x, self.y);
+    return ret.operate(function (data, i, j) {
+        return self.get(i, j);
+    });
 };
 
 module.exports = Rect;

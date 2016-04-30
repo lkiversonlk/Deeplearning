@@ -4,6 +4,7 @@
 
 
 var Rect = require("./rect");
+var utils = require("./utils");
 
 var rect = new Rect(4, 5);
 rect.randomize();
@@ -16,3 +17,7 @@ var rectC = rectA.junc(rectB);
 console.log(rectC.toString());
 
 console.log(rectC.transpose().toString());
+
+console.log(utils.sigmoid(1));
+
+console.log(utils.shuffle(4));
