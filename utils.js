@@ -28,7 +28,7 @@ utils = {
 
         for(var i = 0; i < index; i++){
             var select = parseInt(Math.random() * (index - i));
-            swap(i, select);
+            swap(i, select + i);
         }
         return data;
     }
